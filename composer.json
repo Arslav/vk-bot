@@ -1,0 +1,6 @@
+{
+    "require": {
+        "digitalstars/simplevk": "^2.14",
+        "monolog/monolog": "^2.2"
+    }
+}
