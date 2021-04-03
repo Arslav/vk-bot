@@ -1,7 +1,17 @@
 {
+    "name": "arslav/vk-bot",
+    "description": "Бот для беседы VK",
+    "license": "MIT",
     "require": {
         "digitalstars/simplevk": "^2.14",
         "monolog/monolog": "^2.2",
-        "vlucas/phpdotenv": "^5.3"
+        "vlucas/phpdotenv": "^5.3",
+        "symfony/orm-pack": "^2.1"
+    },
+    "require-dev": {
+        "symfony/maker-bundle": "^1.30"
+    },
+    "config": {
+        "platform-check": false
     }
 }
