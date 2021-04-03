@@ -6,39 +6,57 @@ use Monolog\Handler\StreamHandler;
 
 require __DIR__ . '/vendor/autoload.php';
 
-const VK_KEY = '...';
-const CONFIRM_STR = '...';
-const VERSION = '5.101';
-
 $log = new Logger('vk bot');
-$log->pushHandler(new StreamHandler('app.log', Logger::DEBUG));
+$log->pushHandler(new StreamHandler('app.log', Logger::INFO));
 
-$vk = vk_api::create(VK_KEY, VERSION)->setConfirm(CONFIRM_STR);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv->load();
+
+define('VK_API_TOKEN', $_ENV['VK_API_TOKEN']);
+define('VK_API_VERSION', $_ENV['VK_API_VERSION']);
+define('VK_API_CONFIRM_STRING', $_ENV['VK_API_CONFIRM_STRING']);
+
+$vk = vk_api::create(VK_API_TOKEN, VK_API_VERSION)->setConfirm(VK_API_CONFIRM_STRING);
 
 $data = $vk->initVars($id, $message, $payload, $user_id, $type);
 
-$log->info('info: '.print_r($type,true));
-$log->info('message: '.print_r($message,true));
-$log->info('user_id: '.print_r($user_id,true));
+$log->debug('type: '.print_r($type,true));
+$log->debug('payload: '.print_r($payload,true));
+$log->debug('data: '.print_r($data,true));
+$log->debug('message: '.print_r($message,true));
+$log->debug('user_id: '.print_r($user_id,true));
+$message = mb_strtolower($message);
 
 if($type == 'message_new') {
-	$log->debug('VK message_new event start');
-    if($message == "Слава, кто я?") {
-		$log->debug('Find command: "Слава, кто я?"');
-        $str = who();
-        $vk->reply("%a_fn%, ты - $str!");
+	$log->info('VK message_new event start');
+    if($message == "слава, кто я?") {
+		$log->info('Find command: "Слава, кто я?"');
+		if ($user_id != 57321267) {
+			$str = who();
+			$vk->reply("%a_fn%, ты - $str!");
+		}else{
+			$vk->reply("%a_fn%, вы - главный врач психиатрической больницы!");
+		}
     }
-	if($message == "Слава, кто Слава?")
+	if($message == "слава, кто слава?")
 	{
-		$log->debug('Find command: "Слава, кто Слава?"');
+		$log->info('Find command: "Слава, кто Слава?"');
 		$vk->reply("НАША СЛАВА РУССКАЯ ДЕРЖАВА, ВОТ КТО НАША СЛАВА!!!!");
 	}
-	if($message == "Слава, кто Хендис?")
+	if($message == "слава, кто хендис?")
 	{
-		$log->debug('Find command: "Слава, кто Хендис?"');
+		$log->info('Find command: "Слава, кто Хендис?"');
 		$vk->reply("Вячеслав из дома Ардесов именуемый Хэндис, солнцеликий, магистр ордена рыцарей Наару, один из основателей гильдии, первый рейд лидер, хранитель устава, создатель гильдейской геральдики, лорд и защитник группы ВК и сервера Дискорд");
 	}
+	if($message == "ыыыы" || $message=="кря" || $data == "аыаыаыа")
+	{
+		$log->info('Find command: "ыыыыы"');
+		$img = rand(1,11);
+        $vk->sendImage($data->object->peer_id, "images/$img.png");
+	}
 }
+
+
 
 function who() : string
 {

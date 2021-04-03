@@ -24,3 +24,6 @@ composer.phar
 /composer.lock
 /app.log
 /error/
+/robots.txt
+/images/
+/.env
