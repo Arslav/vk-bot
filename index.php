@@ -1,6 +1,7 @@
 <?php
 
 use Bot\App;
+use Bot\Commands\AutistCommand;
 use DigitalStar\vk_api\vk_api;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
@@ -20,4 +21,8 @@ $logger->pushHandler(new StreamHandler('app.log', LOG_LEVEL));
 
 $vk = vk_api::create(VK_API_TOKEN, VK_API_VERSION)->setConfirm(VK_API_CONFIRM_STRING);
 
-(new App($logger, $vk))->run();
+$app = new App($logger, $vk);
+
+$app->add(new AutistCommand());
+
+$app->run();

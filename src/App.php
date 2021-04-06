@@ -2,14 +2,14 @@
 
 namespace Bot;
 
-use Bot\Command\BaseCommand;
+use Bot\Commands\BaseCommand;
 use DigitalStar\vk_api\vk_api;
 use Psr\Log\LoggerInterface;
 
 class App
 {
     /**
-     * @var
+     * @var App
      */
     public static $app;
 
