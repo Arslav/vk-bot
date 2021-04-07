@@ -32,12 +32,8 @@ if($type == 'message_new') {
 	$log->info('VK message_new event start');
     if($message == "слава, кто я?") {
 		$log->info('Find command: "Слава, кто я?"');
-		if ($user_id != 57321267) {
-			$str = who();
-			$vk->reply("%a_fn%, ты - $str!");
-		}else{
-			$vk->reply("%a_fn%, вы - главный врач психиатрической больницы!");
-		}
+        $str = who();
+        $vk->reply("%a_fn%, ты - $str!");
     }
 	if($message == "слава, кто слава?")
 	{
@@ -52,8 +48,7 @@ if($type == 'message_new') {
 	if($message == "ыыыы" || $message=="кря" || $data == "аыаыаыа")
 	{
 		$log->info('Find command: "ыыыыы"');
-		$img = rand(1,11);
-        $vk->sendImage($data->object->peer_id, "images/$img.png");
+        $vk->reply('ыыыы');
 	}
 }
 
