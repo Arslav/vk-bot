@@ -7,7 +7,6 @@ use Bot\App;
 
 class AutistCommand extends BaseCommand
 {
-    public $aliases = ['ыыыы'];
     /**
      * @inheritDoc
      */

@@ -54,19 +54,22 @@ class App
      */
     public function run() : void
     {
+        //TODO: Добавить перехват и логирование исключений
         $this->logger->info('App started');
-        $data = $this->api->initVars();
-        $this->logger->debug('Received data', $data);
+        $data = $this->api->initVars($id, $message);
+        if($data != null) {
+            $this->logger->debug('Received data: ' . print_r($data, true));
 
-        if($data->type == 'message_new') {
-            $this->logger->info('New message');
+            if ($data->type == 'message_new') {
+                $this->logger->info('New message');
 
-            /** @var BaseCommand $command */
-            foreach ($this->commands as $command){
-                $message = mb_strtolower($data->object->text);
-                if(in_array($message, $command->aliases)){
-                    $this->logger->info('Command started: '.$message);
-                    $command->action($data);
+                /** @var BaseCommand $command */
+                foreach ($this->commands as $command) {
+                    $message = mb_strtolower($data->object->text);
+                    if (in_array($message, $command->aliases)) {
+                        $this->logger->info('Command started: ' . $message);
+                        $command->action($data);
+                    }
                 }
             }
         }
