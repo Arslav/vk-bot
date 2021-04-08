@@ -2,7 +2,7 @@
 
 namespace Bot\Commands;
 
-abstract class BaseCommand
+abstract class AbstractBaseCommand
 {
     /**
      * @var array

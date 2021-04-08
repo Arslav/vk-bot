@@ -2,8 +2,9 @@
 
 namespace Bot;
 
-use Bot\Commands\BaseCommand;
+use Bot\Commands\AbstractBaseCommand;
 use DigitalStar\vk_api\vk_api;
+use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
 class App
@@ -11,40 +12,84 @@ class App
     /**
      * @var App
      */
-    public static $app;
+    private static $app;
 
     /**
      * @var LoggerInterface
      */
-    public $logger;
+    private static $logger;
 
     /**
      * @var vk_api
      */
-    public $api;
+    private static $vk;
+
+    /**
+     * @var ContainerInterface
+     */
+    private static $container;
 
     /**
      * @var array
      */
     private $commands = [];
 
+    /**
+     * App constructor.
+     */
+    private function __construct() {}
 
     /**
-     * App constructor
-     * @param LoggerInterface $logger
-     * @param vk_api $api
+     * @param ContainerInterface $container
+     * @return App
      */
-    public function __construct(LoggerInterface $logger, vk_api $api)
+    public static function create(ContainerInterface $container) : App
     {
-        $this->logger = $logger;
-        $this->api = $api;
-        App::$app = $this;
+        if (self::$app === null) {
+            self::$app = new App();
+            self::$container = $container;
+            self::$vk = $container->get(vk_api::class);
+            self::$logger = $container->get(LoggerInterface::class);
+        }
+        return self::$app;
     }
 
     /**
-     * @param BaseCommand $command
+     * @return App
      */
-    public function add(BaseCommand $command) : void
+    public static function getInstance(): App
+    {
+        return self::$app;
+    }
+
+    /**
+     * @return LoggerInterface
+     */
+    public static function getLogger(): LoggerInterface
+    {
+        return self::$logger;
+    }
+
+    /**
+     * @return vk_api
+     */
+    public static function getVk(): vk_api
+    {
+        return self::$vk;
+    }
+
+    /**
+     * @return ContainerInterface
+     */
+    public static function getContainer(): ContainerInterface
+    {
+        return self::$container;
+    }
+
+    /**
+     * @param AbstractBaseCommand $command
+     */
+    public function add(AbstractBaseCommand $command) : void
     {
         $this->commands[] = $command;
     }
@@ -55,24 +100,24 @@ class App
     public function run() : void
     {
         //TODO: Добавить перехват и логирование исключений
-        $this->logger->info('App started');
-        $data = $this->api->initVars($id, $message);
+        self::$logger->info('App started');
+        $data = self::$vk->initVars($id, $message);
         if($data != null) {
-            $this->logger->debug('Received data: ' . print_r($data, true));
+            self::$logger->debug('Received data: ' . print_r($data, true));
 
             if ($data->type == 'message_new') {
-                $this->logger->info('New message');
+                self::$logger->info('New message');
 
-                /** @var BaseCommand $command */
+                /** @var AbstractBaseCommand $command */
                 foreach ($this->commands as $command) {
                     $message = mb_strtolower($data->object->text);
                     if (in_array($message, $command->aliases)) {
-                        $this->logger->info('Command started: ' . $message);
+                        self::$logger->info('Command started: ' . $message);
                         $command->action($data);
                     }
                 }
             }
         }
-        $this->logger->info('App ended');
+        self::$logger->info('App ended');
     }
 }

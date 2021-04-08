@@ -6,7 +6,7 @@ namespace Bot\Commands;
 
 use Bot\App;
 
-class WhoAmICommand extends BaseCommand
+class WhoAmICommand extends AbstractBaseCommand
 {
     /**
      * @inheritDoc
@@ -121,6 +121,6 @@ class WhoAmICommand extends BaseCommand
         $adjective_id = rand(1, count($adjectives) - 1);
 
         $str =  mb_strtolower($adjectives[$adjective_id]." ".$nouns[$noun_id]);
-        App::$app->api->reply("%a_fn%, ты - $str!");
+        App::getVk()->reply("%a_fn%, ты - $str!");
     }
 }

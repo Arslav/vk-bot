@@ -5,13 +5,13 @@ namespace Bot\Commands;
 
 use Bot\App;
 
-class AutistCommand extends BaseCommand
+class AutistCommand extends AbstractBaseCommand
 {
     /**
      * @inheritDoc
      */
     public function action($data): void
     {
-        App::$app->api->reply('ыыыы');
+        App::getVk()->reply('ыыыы');
     }
 }
