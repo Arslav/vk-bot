@@ -42,7 +42,9 @@ return [
     }),
 
     vk_api::class => DI\factory(function (ContainerInterface $c) {
-        return vk_api::create($c->get('VK_API_TOKEN'), $c->get('VK_API_VERSION'))->setConfirm($c->get('VK_API_CONFIRM_STRING'));
+        $vk = vk_api::create($c->get('VK_API_TOKEN'), $c->get('VK_API_VERSION'))->setConfirm($c->get('VK_API_CONFIRM_STRING'));
+        $vk->debug();
+        return $vk;
     }),
 ];
 

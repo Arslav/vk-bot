@@ -6,7 +6,7 @@ use Bot\Commands\WhoAmICommand;
 
 $container = require __DIR__.'/bootstrap.php';
 
-$app = App::create($container);
+$app = App::init($container);
 
 $app->add(new AutistCommand(['ыыыы', 'кря', 'аыаыаы']));
 $app->add(new WhoAmICommand(['слава, кто я?', 'слава кто я', 'слава что я', 'слава, что я?', 'слава, кто я', 'слава, что я']));

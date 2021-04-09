@@ -1,6 +1,6 @@
 <?php
 
-namespace Bot\Commands;
+namespace Bot\Base;
 
 abstract class AbstractBaseCommand
 {
