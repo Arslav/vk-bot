@@ -5,6 +5,7 @@ namespace Bot;
 use Bot\Base\AbstractBaseCommand;
 use DigitalStar\vk_api\vk_api;
 use Doctrine\ORM\EntityManager;
+use Exception;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -96,24 +97,30 @@ class App
      */
     public function run() : void
     {
-        //TODO: Добавить перехват и логирование исключений
         self::getLogger()->info('App started');
-        $data = self::getVk()->initVars($id, $message);
-        if($data != null) {
-            self::getLogger()->debug('Received data: ' . print_r($data, true));
+        try {
+            $data = self::getVk()->initVars($id, $message);
+            if ($data != null) {
+                self::getLogger()->debug('Received data: ' . print_r($data, true));
 
-            if ($data->type == 'message_new') {
-                self::getLogger()->info('New message');
+                if ($data->type == 'message_new') {
+                    self::getLogger()->info('New message');
 
-                /** @var AbstractBaseCommand $command */
-                foreach ($this->commands as $command) {
-                    $message = mb_strtolower($data->object->text);
-                    if (in_array($message, $command->aliases)) {
-                        self::getLogger()->info('Command started: ' . $message);
-                        $command->action($data);
+                    /** @var AbstractBaseCommand $command */
+                    foreach ($this->commands as $command) {
+                        $message = mb_strtolower($data->object->text);
+                        if (in_array($message, $command->aliases)) {
+                            self::getLogger()->info('Command started: ' . $message);
+                            $command->action($data);
+                            self::getLogger()->info('Command ended');
+                        }
                     }
                 }
             }
+        }
+        catch (Exception $e) //TODO: раскидать по типам исключений
+        {
+            self::getLogger()->error($e->getMessage());
         }
         self::getLogger()->info('App ended');
     }
