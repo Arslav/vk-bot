@@ -3,6 +3,7 @@
 use Dotenv\Dotenv;
 
 require_once 'vendor/autoload.php';
+require_once 'helpers.php';
 
 $dotenv = Dotenv::createMutable(__DIR__);
 $dotenv->load();

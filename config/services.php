@@ -38,7 +38,10 @@ return [
     }),
 
     EntityManager::class => DI\factory(function (ContainerInterface $c) {
-        return $entityManager = EntityManager::create($c->get(DriverManager::class), $c->get(Doctrine\ORM\Configuration::class));
+        return $entityManager = EntityManager::create(
+            $c->get(DriverManager::class),
+            $c->get(Doctrine\ORM\Configuration::class)
+        );
     }),
 
     vk_api::class => DI\factory(function (ContainerInterface $c) {

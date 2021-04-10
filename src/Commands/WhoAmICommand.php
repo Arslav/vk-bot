@@ -4,124 +4,95 @@ namespace Bot\Commands;
 
 use Bot\App;
 use Bot\Base\AbstractBaseCommand;
+use Bot\Entities\WhoHistory;
+use Bot\Entities\WhoItem;
+use Carbon\Carbon;
 use DigitalStar\vk_api\VkApiException;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\OptimisticLockException;
+use Doctrine\ORM\ORMException;
+use Doctrine\ORM\Query\Parameter;
+use Symfony\Component\VarDumper\VarDumper;
 
 class WhoAmICommand extends AbstractBaseCommand
 {
+
     /**
      * @inheritDoc
      * @throws VkApiException
      */
     public function action($data): void
     {
-        //TODO: Необходимо получать данные с БД
-        $nouns_list = [
-            'male' => [
-                'Шизоид',
-                'Император',
-                'Другой квадрат',
-                'Инвалид',
-                'Мифик-дурик',
-                'Паладин',
-                'Туча',
-                'Вайп на треше',
-                'Айсикью',
-                'Дурик',
-                'Путник',
-                'Флюгегехаймен',
-                'Клоун',
-                'Денатурал',
-                'Мыш',
-                'Рога-хант',
-                'Гном-террорист',
-            ],
-            'female' => [
-                'Креветка',
-                'Сосалка лока',
-                'Булочка',
-                'Печенька в клеточку',
-                'Вафелька',
-                'Сися',
-                'Мышь',
-                'Крутила',
-                'Занеш',
-                'Женщина 24 лет',
-                'Боешка',
-                'Анима',
-            ],
-        ];
-        $adjectives_list = [
-            'male' => [
-                'Ыканутый',
-                'Собравший все бафы на урон и инту',
-                'Уронивший',
-                'Непоевший',
-                'Уставший',
-                'Энергичный',
-                'Злой',
-                'Капризный',
-                'Вредный',
-                'Засыпающий',
-                'Денатуральный',
-                'Спамящий',
-                'Бесполезный',
-                'Большой синий и светящийся',
-                'Вумный',
-                'Собравший все бафы на урон и инту',
-                'Элитный',
-                'Эпический',
-                'Гиперультрасупер редкий',
-                'Паладинистый',
-                'С дебаффом от вантийки',
-                'Застаканный',
-                'Поевший',
-                'Познавший все тайны подвала',
-                'Сбежавший из подвала',
-                'Вещающий из подвала',
-                'Сбежавший из дурки',
-            ],
-            'female' => [
-                'Ыканутая',
-                'Собравшая все бафы на урон и инту',
-                'Уронившая',
-                'Непоевшая',
-                'Уставшая',
-                'Энергичная',
-                'Злая',
-                'Капризная',
-                'Вредная',
-                'Засыпающая',
-                'Денатуральная',
-                'Спамящая',
-                'Бесполезная',
-                'Большая синяя и светящаяся',
-                'Вумная',
-                'Собравшая все бафы на урон и инту',
-                'Элитная',
-                'Эпическая',
-                'Гиперультрасупер редкая',
-                'Паладинистая',
-                'С дебаффом от вантийки',
-                'Застаканная',
-                'Поевшая',
-                'Познавшая все тайны подвала',
-                'Сбежавшая из подвала',
-                'Вещающая из подвала',
-                'Сбежавшая из дурки',
-            ],
-        ];
-
-        $genders = ['male', 'female'];
-
-        $gender = $genders[rand(1, count($genders)) - 1];
-
-        $nouns = $nouns_list[$gender];
-        $adjectives = $adjectives_list[$gender];
-
-        $noun_id = rand(1, count($nouns)) - 1;
-        $adjective_id = rand(1, count($adjectives) - 1);
-
-        $str =  mb_strtolower($adjectives[$adjective_id]." ".$nouns[$noun_id]);
-        App::getVk()->reply("%a_fn%, ты - $str!");
+        $user_id = $data->object->from_id;
+        $history = $this->getHistory($user_id);
+        if($history) {
+            $name = $history->getName();
+        } else {
+            $name = $this->getRandomName();
+            $this->createHistory($name, $user_id);
+        }
+        App::getVk()->reply("%a_fn%, ты - $name!");
     }
+
+    protected function getRandomName()
+    {
+        $repository = App::getEntityManager()->getRepository(WhoItem::class);
+        $genuses = $repository->createQueryBuilder('w')
+            ->select('w.genus')
+            ->distinct()
+            ->getQuery()
+            ->execute();
+        if($genuses == null) throw new \Exception();
+
+        $genus = randomSelect($genuses)['genus'];
+        $nouns = $repository->findBy(['genus' => $genus, 'type' => WhoItem::TYPE_NOUN]);
+        $adjectives = $repository->findBy(['genus' => $genus, 'type' => WhoItem::TYPE_ADJECTIVE]);
+
+        if(!$nouns || !$adjectives) throw new \Exception();
+        $name = randomSelect($adjectives)->getWord().' '.randomSelect($nouns)->getWord();
+
+        return mb_strtolower($name);
+    }
+
+    /**
+     * @param $user_id
+     * @return WhoHistory | null
+     * @throws NonUniqueResultException
+     */
+    private function getHistory(int $user_id) : ?WhoHistory
+    {
+        $repository = App::getEntityManager()->getRepository(WhoHistory::class);
+        /** @var WhoHistory $history */
+        $history = $repository->createQueryBuilder('h')
+            ->where('h.created_at BETWEEN :start AND :end')
+            ->andWhere('h.user_id = :user_id')
+            ->setParameters([
+                'start' => Carbon::today()->timestamp,
+                'end' => Carbon::tomorrow()->timestamp,
+                'user_id' => $user_id,
+            ])
+            ->getQuery()
+            ->getOneOrNullResult();
+        return $history;
+    }
+
+    /**
+     * @param string $name
+     * @param int $user_id
+     * @return WhoHistory | null
+     * @throws ORMException
+     * @throws OptimisticLockException
+     */
+    private function createHistory(string $name, int $user_id) : ?WhoHistory
+    {
+        $em = App::getEntityManager();
+        $history = new WhoHistory();
+        $history->setName($name);
+        $history->setUserId($user_id);
+        $em->persist($history);
+        $em->flush($history);
+        return $history;
+    }
+
 }

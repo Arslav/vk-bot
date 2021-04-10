@@ -4,6 +4,7 @@ namespace Bot;
 
 use Bot\Base\AbstractBaseCommand;
 use DigitalStar\vk_api\vk_api;
+use Doctrine\ORM\EntityManager;
 use Psr\Container\ContainerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -64,6 +65,14 @@ class App
     public static function getVk(): vk_api
     {
         return self::$container->get(vk_api::class);
+    }
+
+    /**
+     * @return EntityManager
+     */
+    public static function getEntityManager() : EntityManager
+    {
+        return self::$container->get(EntityManager::class);
     }
 
     /**
