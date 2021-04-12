@@ -15,6 +15,6 @@ class AutistCommand extends AbstractBaseCommand
      */
     public function action($data): void
     {
-        App::getVk()->reply('ыыыы');
+        App::getVk()->reply($data->object->text);
     }
 }

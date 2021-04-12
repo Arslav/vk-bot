@@ -104,14 +104,12 @@ class App
                 self::getLogger()->debug('Received data: ' . print_r($data, true));
 
                 if ($data->type == 'message_new') {
-                    self::getLogger()->info('New message: '. print_r($message));
-                    $message = mb_strtolower($data->object->text) ?? 'слава кто я';
+                    self::getLogger()->info('New message: '. print_r($message, true));
+                    $message = $data->object->text;
                     /** @var AbstractBaseCommand $command */
                     foreach ($this->commands as $command) {
                         foreach ($command->aliases as $alias) {
-                            $match = preg_match($alias, $message);
-                            self::getLogger()->debug('Match: '. print_r($match));
-                            if ($match) {
+                            if (preg_match('/'.$alias.'/ui', $message)) {
                                 self::getLogger()->info('Command started: ' . $message);
                                 $command->action($data);
                                 self::getLogger()->info('Command ended');
