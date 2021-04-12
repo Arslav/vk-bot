@@ -16,6 +16,10 @@ return [
     'VK_API_VERSION' => DI\env('VK_API_VERSION'),
     'VK_API_CONFIRM_STRING' => DI\env('VK_API_CONFIRM_STRING'),
 
+    'isDev' => DI\factory(function ($c) {
+        return $c->get('ENVIRONMENT') == 'dev';
+    }),
+
     StreamHandler::class => DI\factory(function (ContainerInterface $c) {
         return new StreamHandler('app.log', $c->get('LOG_LEVEL'));
     }),
@@ -28,7 +32,7 @@ return [
 
     Doctrine\ORM\Configuration::class => DI\factory(function (ContainerInterface $c) {
         $paths = ['src/Entities'];
-        return Setup::createAnnotationMetadataConfiguration($paths, $c->get('ENVIRONMENT') == 'dev');
+        return Setup::createAnnotationMetadataConfiguration($paths, $c->get('isDev'));
     }),
 
     DriverManager::class => DI\factory(function (ContainerInterface $c) {
@@ -38,7 +42,7 @@ return [
     }),
 
     EntityManager::class => DI\factory(function (ContainerInterface $c) {
-        return $entityManager = EntityManager::create(
+        return EntityManager::create(
             $c->get(DriverManager::class),
             $c->get(Doctrine\ORM\Configuration::class)
         );
@@ -46,7 +50,7 @@ return [
 
     vk_api::class => DI\factory(function (ContainerInterface $c) {
         $vk = vk_api::create($c->get('VK_API_TOKEN'), $c->get('VK_API_VERSION'))->setConfirm($c->get('VK_API_CONFIRM_STRING'));
-        if($c->get('ENVIRONMENT') == 'dev') {
+        if ($c->get('isDev')) {
             $vk->debug();
         }
         return $vk;

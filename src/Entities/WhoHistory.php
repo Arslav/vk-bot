@@ -12,6 +12,7 @@ use Bot\Entities\Traits\TimestampTrait;
 class WhoHistory
 {
     use TimestampTrait;
+
     /**
      * @Id
      * @Column(type="integer")
@@ -22,6 +23,9 @@ class WhoHistory
     /** @Column(type="integer", length=255, nullable=false) */
     protected $user_id;
 
+    /** @Column(type="integer", length=255, nullable=false) */
+    protected $peer_id;
+
     /** @Column(type="string", length=255, nullable=false) */
     protected $name;
 
@@ -29,7 +33,7 @@ class WhoHistory
     /**
      * @return string
      */
-    public function getUserId()
+    public function getUserId(): string
     {
         return $this->user_id;
     }
@@ -45,7 +49,7 @@ class WhoHistory
     /**
      * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return $this->name;
     }
@@ -56,6 +60,22 @@ class WhoHistory
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getPeerId(): int
+    {
+        return $this->peer_id;
+    }
+
+    /**
+     * @param int $peer_id
+     */
+    public function setPeerId(int $peer_id): void
+    {
+        $this->peer_id = $peer_id;
     }
 
 }

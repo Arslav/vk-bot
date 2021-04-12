@@ -14,7 +14,7 @@ $app->add(new AutistCommand([
     '^кря$',
     '^[аы]{2,}$',
 ]));
-$app->add(new WhoAmICommand(['^слава(\,)?\s*[к,ч,х]то\s*я(\?)*$']));
+$app->add(new WhoAmICommand(['^слава(\,)?\s*[кчх]то\s*я(\?)*$']));
 
 $app->run();
 
