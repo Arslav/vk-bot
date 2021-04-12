@@ -104,15 +104,19 @@ class App
                 self::getLogger()->debug('Received data: ' . print_r($data, true));
 
                 if ($data->type == 'message_new') {
-                    self::getLogger()->info('New message');
-
+                    self::getLogger()->info('New message: '. print_r($message));
+                    $message = mb_strtolower($data->object->text) ?? 'слава кто я';
                     /** @var AbstractBaseCommand $command */
                     foreach ($this->commands as $command) {
-                        $message = mb_strtolower($data->object->text);
-                        if (in_array($message, $command->aliases)) {
-                            self::getLogger()->info('Command started: ' . $message);
-                            $command->action($data);
-                            self::getLogger()->info('Command ended');
+                        foreach ($command->aliases as $alias) {
+                            $match = preg_match($alias, $message);
+                            self::getLogger()->debug('Match: '. print_r($match));
+                            if ($match) {
+                                self::getLogger()->info('Command started: ' . $message);
+                                $command->action($data);
+                                self::getLogger()->info('Command ended');
+                                break;
+                            }
                         }
                     }
                 }
