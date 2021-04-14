@@ -5,6 +5,7 @@ namespace Bot\Commands;
 use Bot\App;
 use Bot\Base\AbstractBaseCommand;
 use DigitalStar\vk_api\VkApiException;
+use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
 class GiveMePillsCommand extends AbstractBaseCommand
@@ -20,17 +21,21 @@ class GiveMePillsCommand extends AbstractBaseCommand
         } else {
             App::getVk()->reply('Таблетки кончились');
         }
-
     }
 
     private function getPillsImages() : array
     {
-        $finder = new Finder();
-        $finder->files()->in(__DIR__.'/../../images/pills');
         $files = [];
-        foreach ($finder as $file)
+        try
         {
-            $files[] = $file->getPathname();
+            $finder = new Finder();
+            $finder->files()->in(__DIR__.'/../../images/pills');
+            foreach ($finder as $file)
+            {
+                $files[] = $file->getPathname();
+            }
+        }catch (DirectoryNotFoundException $exception){
+            App::getLogger()->error($exception->getMessage());
         }
         return $files;
     }

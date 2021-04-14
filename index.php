@@ -17,6 +17,6 @@ $app->add(new AutistCommand([
 ]));
 $app->add(new WhoAmICommand(['^сла+ва+(\,)? [кчх]то+ я\s?(\?)*$']));
 $app->add(new WhoWeCommand(['^сла+ва+(\,)? [хк]то+ мы+\s?(\?)*$']));
-$app->add(new GiveMePillsCommand(['сла+ва+(\,)? дай таблетки+\s[(\!)(\?)]*$']));
+$app->add(new GiveMePillsCommand(['сла+ва+(\,)? дай таблетки+\s?[(\!)(\?)]*$']));
 
 $app->run();
