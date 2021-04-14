@@ -38,7 +38,7 @@ class WhoAmICommand extends AbstractBaseCommand
         } else {
             $name = $history->getName();
         }
-        App::getVk()->reply("%a_fn%, ты - $name!");
+        App::getVk()->reply("%a_fn%, ты - $name!", ['disable_mentions' => 1]);
     }
 
     /**

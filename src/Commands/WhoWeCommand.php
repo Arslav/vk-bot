@@ -47,7 +47,7 @@ class WhoWeCommand extends AbstractBaseCommand
             $message .= "$real_name - $name \n";
         }
 
-        App::getVk()->reply($message);
+        App::getVk()->reply($message, ['disable_mentions' => 1]);
 
     }
 }
