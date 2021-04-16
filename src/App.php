@@ -110,7 +110,7 @@ class App
                     foreach ($this->commands as $command) {
                         foreach ($command->aliases as $alias) {
                             if (preg_match('/'.$alias.'/ui', $message)) {
-                                self::getLogger()->info('Command started: ' . $message);
+                                self::getLogger()->info('Command started: ' . get_class($command));
                                 $command->action($data);
                                 self::getLogger()->info('Command ended');
                                 break;
