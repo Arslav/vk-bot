@@ -47,11 +47,13 @@ trait CooldownTrait
         return $repository->createQueryBuilder('l')
             ->select('count(l.id)')
             ->where('l.created_at BETWEEN :start AND :end')
+            ->andWhere('l.command = :command')
             ->andWhere('l.user_id = :user_id')
             ->setParameters(new ArrayCollection([
                 new Parameter('start', Carbon::now()->timestamp-$this->usageInterval),
                 new Parameter('end', Carbon::now()->timestamp),
                 new Parameter('user_id', $user_id),
+                new Parameter('command', static::class),
             ]))
             ->getQuery()
             ->getSingleScalarResult();
