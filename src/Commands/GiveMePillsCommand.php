@@ -4,12 +4,24 @@ namespace Bot\Commands;
 
 use Bot\App;
 use Bot\Base\AbstractBaseCommand;
+use Bot\Commands\Traits\CooldownTrait;
 use DigitalStar\vk_api\VkApiException;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
 class GiveMePillsCommand extends AbstractBaseCommand
 {
+    use CooldownTrait;
+
+    /**
+     * @param $data
+     * @return bool
+     */
+    public function beforeAction($data): bool
+    {
+        return $this->checkCooldown($data->object->from_id);
+    }
+
     /**
      * @inheritDoc
      * @throws VkApiException

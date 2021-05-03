@@ -9,7 +9,19 @@ abstract class AbstractBaseCommand
      */
     public $aliases = [];
 
+    /**
+     * @param $data
+     * @return bool
+     */
+    public function beforeAction($data): bool
+    {
+        return true;
+    }
 
+    /**
+     * AbstractBaseCommand constructor.
+     * @param $aliases
+     */
     public function __construct($aliases)
     {
         $this->aliases = $aliases;

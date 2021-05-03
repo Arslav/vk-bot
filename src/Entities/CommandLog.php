@@ -5,6 +5,7 @@ namespace Bot\Entities;
 use Bot\Entities\Traits\TimestampTrait;
 /**
  * @Entity
+ * @HasLifecycleCallbacks
  */
 class CommandLog
 {
