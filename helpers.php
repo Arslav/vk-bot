@@ -18,22 +18,29 @@ function randomSelect(array $collection)
  * @param string $dir
  * @return array
  */
-function getFiles(string $dir) : array
+function getFiles(string $dir): array
 {
 
     $files = [];
-    try
-    {
+    try {
         $finder = new Finder();
 
-        $finder->files()->in(__DIR__.$dir);
+        $finder->files()->in(__DIR__ . $dir);
 
-        foreach ($finder as $file)
-        {
+        foreach ($finder as $file) {
             $files[] = $file->getPathname();
         }
-    }catch (DirectoryNotFoundException $exception){
+    } catch (DirectoryNotFoundException $exception) {
         App::getLogger()->error($exception->getMessage());
     }
     return $files;
+}
+
+/**
+ * @param float $chance
+ * @return bool
+ */
+function checkChance(float $chance): bool
+{
+    return rand(0,100) < $chance*100;
 }

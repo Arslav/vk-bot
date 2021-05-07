@@ -31,7 +31,7 @@ class PressFCommand extends AbstractBaseCommand
      */
     public function action($data): void
     {
-        $send_picture = rand(0,100) < $this->chance*100;
+        $send_picture = checkChance($this->chance);
         $f_pictures = getFiles('/images/f');
         if($send_picture && $f_pictures) {
             App::getVk()->sendImage($data->object->peer_id,randomSelect($f_pictures));
