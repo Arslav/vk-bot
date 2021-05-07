@@ -17,7 +17,7 @@ class PressFCommand extends AbstractBaseCommand
      */
     public function beforeAction($data): bool
     {
-        return $this->checkCooldown($data->object->from_id);
+        return $this->checkCooldown($data->object->peer_id);
     }
 
     /**
