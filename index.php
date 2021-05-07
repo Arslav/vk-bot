@@ -8,6 +8,7 @@ use Bot\Commands\KickMeCommand;
 use Bot\Commands\PressFCommand;
 use Bot\Commands\WhoAmICommand;
 use Bot\Commands\WhoWeCommand;
+use Bot\Commands\WowSpecTopCommand;
 
 $container = require __DIR__ . '/bootstrap.php';
 
@@ -25,5 +26,6 @@ $app->add(new WhoAmICommand(['^сла+ва+(\,)? [кчх]то+ я\s?(\?)*$']));
 $app->add(new WhoWeCommand(['^сла+ва+(\,)? [хк]то+ мы+\s?(\?)*$']));
 $app->add(new GiveMePillsCommand(['сла+ва+(\,)? дай табле(тки+|то+к)\s?[(\!)(\?)]*$']));
 $app->add(new PressFCommand(['(.*\s|^)f([\.\!\?\,]|\s.*|$)']));
+$app->add(new WowSpecTopCommand(['^сла+ва+(\,)? [хк]то+ (сегодня\s)?топ\s?[(\!)(\?)]*$']));
 
 $app->run();
