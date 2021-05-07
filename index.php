@@ -4,6 +4,7 @@ use Bot\App;
 use Bot\Commands\AutistCommand;
 use Bot\Commands\BlyaCommand;
 use Bot\Commands\GiveMePillsCommand;
+use Bot\Commands\KickMeCommand;
 use Bot\Commands\PressFCommand;
 use Bot\Commands\WhoAmICommand;
 use Bot\Commands\WhoWeCommand;
@@ -18,6 +19,7 @@ $app->add(new AutistCommand([
     '^ря+$',
     '^[аы]{2,}$',
 ]));
+$app->add(new KickMeCommand(['^сла+ва+(\,)? не ки+ка+й\s?[(\!)(\?)]*$']));
 $app->add(new BlyaCommand(['^ля+$']));
 $app->add(new WhoAmICommand(['^сла+ва+(\,)? [кчх]то+ я\s?(\?)*$']));
 $app->add(new WhoWeCommand(['^сла+ва+(\,)? [хк]то+ мы+\s?(\?)*$']));
