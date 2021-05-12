@@ -13,7 +13,7 @@ class KickMeCommand extends AbstractBaseCommand
     /**
      * @float
      */
-    public $chance = 0.05;
+    public $chance = 0.5;
 
     /**
      * @inheritDoc

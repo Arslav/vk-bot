@@ -10,7 +10,7 @@ class BlyaCommand extends AbstractBaseCommand
     /**
      * @var float
      */
-    public $chance = 0.1;
+    public $chance = 0.33;
 
     /**
      * @inheritDoc

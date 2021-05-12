@@ -14,11 +14,11 @@ trait CooldownTrait
     /**
      * @var int
      */
-    protected $commandUsageCount = 5;
+    protected $commandUsageCount = 10;
     /**
      * @var int
      */
-    protected $usageInterval = 60*15; //60 sec * 15 min
+    protected $usageInterval = 60*5; //60 sec * 5 min
 
     public function checkCooldown($user_id) : bool
     {
