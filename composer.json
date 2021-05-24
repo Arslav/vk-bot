@@ -3,7 +3,8 @@
     "description": "Бот для беседы VK",
     "license": "MIT",
     "require": {
-        "digitalstars/simplevk": "^2.14",
+        "php":"7.2.*",
+	    "digitalstars/simplevk": "^2.14",
         "monolog/monolog": "^2.2",
         "vlucas/phpdotenv": "^5.3",
         "symfony/orm-pack": "^2.1",
@@ -17,7 +18,7 @@
         "symfony/maker-bundle": "^1.30"
     },
     "config": {
-        "platform-check": false
+        "platform-check": true
     },
     "autoload": {
         "psr-4": {
