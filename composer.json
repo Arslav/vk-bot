@@ -10,7 +10,8 @@
         "php-di/php-di": "^6.3",
         "nesbot/carbon": "^2.46",
         "doctrine/migrations": "^3.1",
-        "symfony/finder": "^5.2"
+        "symfony/finder": "^5.2",
+        "psr/cache": "^1"
     },
     "require-dev": {
         "symfony/maker-bundle": "^1.30"
