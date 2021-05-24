@@ -37,7 +37,8 @@ return [
 
     DriverManager::class => DI\factory(function (ContainerInterface $c) {
         return DriverManager::getConnection([
-            'url' => $c->get('DB_CONNECT_STRING')
+            'url' => $c->get('DB_CONNECT_STRING'),
+            'charset' => 'UTF-8',
         ]);
     }),
 
