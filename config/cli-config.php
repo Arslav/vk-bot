@@ -37,25 +37,25 @@ $storageConfiguration->setTableName('doctrine_migration_versions');
 
 $configuration->setMetadataStorageConfiguration($storageConfiguration);
 
-$di = DependencyFactory::fromConnection(
+$df = DependencyFactory::fromConnection(
     new ExistingConfiguration($configuration),
     new ExistingConnection($connection)
 );
-$di->setService(SchemaProvider::class, new OrmSchemaProvider($entityManager));
+$df->setService(SchemaProvider::class, new OrmSchemaProvider($entityManager));
 
 $helperSet = ConsoleRunner::createHelperSet($entityManager);
-$cli = ConsoleRunner::createApplication($helperSet, [
-    new DumpSchemaCommand($di),
-    new ExecuteCommand($di),
-    new GenerateCommand($di),
-    new LatestCommand($di),
-    new ListCommand($di),
-    new MigrateCommand($di),
-    new RollupCommand($di),
-    new StatusCommand($di),
-    new SyncMetadataCommand($di),
-    new VersionCommand($di),
-    new DiffCommand($di)
+$doctrineCli = ConsoleRunner::createApplication($helperSet, [
+    new DumpSchemaCommand($df),
+    new ExecuteCommand($df),
+    new GenerateCommand($df),
+    new LatestCommand($df),
+    new ListCommand($df),
+    new MigrateCommand($df),
+    new RollupCommand($df),
+    new StatusCommand($df),
+    new SyncMetadataCommand($df),
+    new VersionCommand($df),
+    new DiffCommand($df)
 ]);
 
-$cli->run();
+$doctrineCli->run();

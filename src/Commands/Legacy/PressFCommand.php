@@ -3,11 +3,11 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\AbstractBaseCommand;
+use Bot\Base\BaseCommand;
 use Bot\Commands\Traits\CooldownTrait;
 use DigitalStar\vk_api\VkApiException;
 
-class PressFCommand extends AbstractBaseCommand
+class PressFCommand extends BaseCommand
 {
     use CooldownTrait;
 
@@ -29,7 +29,7 @@ class PressFCommand extends AbstractBaseCommand
      * @inheritDoc
      * @throws VkApiException
      */
-    public function action($data): void
+    public function run($data): void
     {
         $send_picture = checkChance($this->chance);
         $f_pictures = getFiles('/images/f');

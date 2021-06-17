@@ -3,7 +3,7 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\AbstractBaseCommand;
+use Bot\Base\BaseCommand;
 use Bot\Entities\WowSpec;
 use Bot\Entities\WowSpecTop;
 use Carbon\Carbon;
@@ -12,7 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Parameter;
 
-class WowSpecTopCommand extends AbstractBaseCommand
+class WowSpecTopCommand extends BaseCommand
 {
     /**
      * @var int
@@ -22,7 +22,7 @@ class WowSpecTopCommand extends AbstractBaseCommand
     /**
      * @inheritDoc
      */
-    public function action($data): void
+    public function run($data): void
     {
         $top = $this->getTop();
         $list = empty($top) ? $this->generateTop() : $top;

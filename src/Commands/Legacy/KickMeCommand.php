@@ -5,10 +5,10 @@ namespace Bot\Commands;
 
 
 use Bot\App;
-use Bot\Base\AbstractBaseCommand;
+use Bot\Base\BaseCommand;
 use DigitalStar\vk_api\VkApiException;
 
-class KickMeCommand extends AbstractBaseCommand
+class KickMeCommand extends BaseCommand
 {
     /**
      * @float
@@ -19,7 +19,7 @@ class KickMeCommand extends AbstractBaseCommand
      * @inheritDoc
      * @throws VkApiException
      */
-    public function action($data): void
+    public function run($data): void
     {
         $chat_id = $data->object->peer_id - 2000000000; //Если $chat_id > 0, то сообщение в беседе, если меньше, то ЛС. см. https://kotoff.net/article/31-vk-bot-poleznye-funkcii-komandy-dlja-bota-vk.html
         if($chat_id > 0 && checkChance($this->chance)) {

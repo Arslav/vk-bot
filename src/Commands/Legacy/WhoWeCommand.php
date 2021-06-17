@@ -4,20 +4,20 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\AbstractBaseCommand;
+use Bot\Base\BaseCommand;
 use Bot\Entities\WhoHistory;
 use Carbon\Carbon;
 use DigitalStar\vk_api\VkApiException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 
-class WhoWeCommand extends AbstractBaseCommand
+class WhoWeCommand extends BaseCommand
 {
     /**
      * @inheritDoc
      * @throws VkApiException
      */
-    public function action($data): void
+    public function run($data): void
     {
         $peer_id = $data->object->peer_id;
         $histories = App::getEntityManager()

@@ -3,7 +3,7 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\AbstractBaseCommand;
+use Bot\Base\BaseCommand;
 use Bot\Entities\WhoHistory;
 use Bot\Entities\WhoItem;
 use Carbon\Carbon;
@@ -15,7 +15,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Parameter;
 use Exception;
 
-class WhoAmICommand extends AbstractBaseCommand
+class WhoAmICommand extends BaseCommand
 {
     /**
      * @inheritDoc
@@ -26,7 +26,7 @@ class WhoAmICommand extends AbstractBaseCommand
      * @throws VkApiException
      * @throws Exception
      */
-    public function action($data): void
+    public function run($data): void
     {
         $user_id = $data->object->from_id;
         $peer_id = $data->object->peer_id;

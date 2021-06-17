@@ -2,12 +2,17 @@
 
 namespace Bot\Base;
 
-abstract class AbstractBaseCommand
+abstract class BaseCommand
 {
     /**
      * @var array
      */
     public $aliases = [];
+
+    /**
+     * @var array
+     */
+    public $args = [];
 
     /**
      * @param $data
@@ -21,14 +26,13 @@ abstract class AbstractBaseCommand
     /**
      * AbstractBaseCommand constructor.
      * @param $aliases
+     * @param $args
      */
-    public function __construct($aliases)
+    public function __construct($aliases, $args)
     {
         $this->aliases = $aliases;
+        $this->args = $args;
     }
 
-    /**
-     * @param $data
-     */
-    public abstract function action($data) : void;
+    public abstract function run() : void;
 }

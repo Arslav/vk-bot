@@ -3,13 +3,13 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\AbstractBaseCommand;
+use Bot\Base\BaseCommand;
 use Bot\Commands\Traits\CooldownTrait;
 use DigitalStar\vk_api\VkApiException;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
-class GiveMePillsCommand extends AbstractBaseCommand
+class GiveMePillsCommand extends BaseCommand
 {
     use CooldownTrait;
 
@@ -26,7 +26,7 @@ class GiveMePillsCommand extends AbstractBaseCommand
      * @inheritDoc
      * @throws VkApiException
      */
-    public function action($data): void
+    public function run($data): void
     {
         $pills = getFiles('/images/pills');
         if($pills) {
