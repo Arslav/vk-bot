@@ -1,4 +1,4 @@
-name: PHP Composer
+name: Deploment & Run (Master)
 
 on:
   push:
@@ -7,28 +7,13 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  deploy:
 
     runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Validate composer.json and composer.lock
-      run: composer validate --strict
-
-    - name: Cache Composer packages
-      id: composer-cache
-      uses: actions/cache@v2
-      with:
-        path: vendor
-        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-php-
-
-    - name: Install dependencies
-      run: composer install --prefer-dist --no-progress
-    
     - name: Copy repository contents via scp
       uses: appleboy/scp-action@master
       env:
@@ -39,3 +24,26 @@ jobs:
       with:
         source: "."
         target: "/var/www/bot"
+
+    - name: Install dependencies
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSHKEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /var/www/bot
+          composer validate --strict
+          composer install --no-progress
+
+    - name: Run migrations
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USER }}
+        key: ${{ secrets.SSHKEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd /var/www/bot
+          php vendor/bin/doctrine migration:migrate --no-interaction
