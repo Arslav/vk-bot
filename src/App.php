@@ -173,7 +173,8 @@ class App
                         if (preg_match($regex, $message, $matches)) {
                             self::getLogger()->debug($regex);
                             self::getLogger()->info('Command detected: ' . get_class($command));
-                            $args = $matches['args'] ?? null;
+                            $str_args = $matches['args'] ?? '';
+                            $args = explode(' ', $str_args);
                             self::getLogger()->debug('Parsed Args: ' . print_r($args, true));
                             $command->init($data, $args);
                             if($command->beforeAction()) {
