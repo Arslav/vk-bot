@@ -1,8 +1,8 @@
 <?php
 
-namespace Bot\Base;
+namespace Bot\Commands;
 
-abstract class BaseCommand
+abstract class Command
 {
     /**
      * @var array
@@ -15,24 +15,24 @@ abstract class BaseCommand
     public $args = [];
 
     /**
-     * @param $data
      * @return bool
      */
-    public function beforeAction($data): bool
+    public function beforeAction(): bool
     {
         return true;
     }
 
     /**
      * AbstractBaseCommand constructor.
-     * @param $aliases
-     * @param $args
+     * @param array $aliases
      */
-    public function __construct($aliases, $args)
+    public function __construct(array $aliases)
     {
         $this->aliases = $aliases;
-        $this->args = $args;
     }
 
-    public abstract function run() : void;
+    /**
+     * @return mixed
+     */
+    public abstract function run();
 }

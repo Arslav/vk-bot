@@ -3,7 +3,7 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\BaseCommand;
+use Bot\Base\Command;
 use Bot\Entities\WowSpec;
 use Bot\Entities\WowSpecTop;
 use Carbon\Carbon;
@@ -12,7 +12,7 @@ use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Parameter;
 
-class WowSpecTopCommand extends BaseCommand
+class WowSpecTopCommand extends Command
 {
     /**
      * @var int

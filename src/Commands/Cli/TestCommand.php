@@ -3,14 +3,19 @@
 namespace Bot\Commands\Cli;
 
 use Bot\App;
-use Bot\Base\CliCommand;
+use Bot\Commands\Cli\Base\CliCommand;
+use DigitalStar\vk_api\VkApiException;
 
 class TestCommand extends CliCommand
 {
-    public function run(): void
+    /**
+     * @throws VkApiException
+     */
+    public function run(): int
     {
-        echo $this->args[0];
-        echo $this->args[1];
-        echo App::getVk()->sendMessage($this->args[0], $this->args[1]);
+        echo $this->args[1].PHP_EOL;
+        echo $this->args[2].PHP_EOL;
+        App::getVk()->sendMessage($this->args[1], $this->args[2]);
+        return 0;
     }
 }

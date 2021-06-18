@@ -3,11 +3,11 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\BaseCommand;
+use Bot\Base\Command;
 use Bot\Commands\Traits\CooldownTrait;
 use DigitalStar\vk_api\VkApiException;
 
-class PressFCommand extends BaseCommand
+class PressFCommand extends Command
 {
     use CooldownTrait;
 

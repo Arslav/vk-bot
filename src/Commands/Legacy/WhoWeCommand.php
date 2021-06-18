@@ -4,14 +4,14 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\BaseCommand;
+use Bot\Base\Command;
 use Bot\Entities\WhoHistory;
 use Carbon\Carbon;
 use DigitalStar\vk_api\VkApiException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Query\Parameter;
 
-class WhoWeCommand extends BaseCommand
+class WhoWeCommand extends Command
 {
     /**
      * @inheritDoc

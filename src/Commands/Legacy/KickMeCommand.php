@@ -5,10 +5,10 @@ namespace Bot\Commands;
 
 
 use Bot\App;
-use Bot\Base\BaseCommand;
+use Bot\Base\Command;
 use DigitalStar\vk_api\VkApiException;
 
-class KickMeCommand extends BaseCommand
+class KickMeCommand extends Command
 {
     /**
      * @float

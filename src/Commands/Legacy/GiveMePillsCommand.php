@@ -3,13 +3,13 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\BaseCommand;
+use Bot\Base\Command;
 use Bot\Commands\Traits\CooldownTrait;
 use DigitalStar\vk_api\VkApiException;
 use Symfony\Component\Finder\Exception\DirectoryNotFoundException;
 use Symfony\Component\Finder\Finder;
 
-class GiveMePillsCommand extends BaseCommand
+class GiveMePillsCommand extends Command
 {
     use CooldownTrait;
 

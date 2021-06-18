@@ -1,6 +1,7 @@
 <?php
 
 use Bot\Commands\Cli\TestCommand;
+use Bot\Commands\Vk\AutistCommand;
 use DigitalStar\vk_api\vk_api;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
@@ -8,6 +9,7 @@ use Doctrine\ORM\Tools\Setup;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use function DI\create;
 use function DI\get;
 
 return [
@@ -17,7 +19,6 @@ return [
     'VK_API_TOKEN' => DI\env('VK_API_TOKEN'),
     'VK_API_VERSION' => DI\env('VK_API_VERSION'),
     'VK_API_CONFIRM_STRING' => DI\env('VK_API_CONFIRM_STRING'),
-    'PREFIX' => DI\env('PREFIX'),
 
     'isDev' => DI\factory(function ($c) {
         return $c->get('ENVIRONMENT') == 'dev';
@@ -59,10 +60,28 @@ return [
         }
         return $vk;
     }),
-    TestCommand::class => \DI\create(TestCommand::class)->constructor(['test']),
+    TestCommand::class => create(TestCommand::class)->constructor(['test']),
+    AutistCommand::class => create(AutistCommand::class)
+        ->constructor(
+            [
+                '^ыы+$',
+                '^кря+$',
+                '^ря+$',
+                '^[аы]{2,}$'
+            ],
+            10,
+            300
+        ),
+    \Bot\Commands\Vk\TestCommand::class => create(\Bot\Commands\Vk\TestCommand::class)
+        ->constructor(['^сла+ва+(\,)? <args>']),
 
     'cli-commands' => [
         get(TestCommand::class),
+    ],
+
+    'vk-commands' => [
+        get(AutistCommand::class),
+        get(\Bot\Commands\Vk\TestCommand::class),
     ]
 ];
 

@@ -2,8 +2,8 @@
 
 namespace Bot;
 
-use Bot\Base\BaseCommand;
-use Bot\Base\CliCommand;
+use Bot\Commands\Cli\Base\CliCommand;
+use Bot\Commands\Vk\Base\VkCommand;
 use DigitalStar\vk_api\vk_api;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -40,10 +40,10 @@ class App
 
     /**
      * @param ContainerInterface $container
-     * @param array $args
+     * @param array | null $args
      * @return App
      */
-    public static function init(ContainerInterface $container, array $args) : App
+    public static function init(ContainerInterface $container, ?array $args) : App
     {
 
         if (self::$app === null) {
@@ -129,46 +129,60 @@ class App
      */
     public function run() : void
     {
-//        self::getLogger()->info('App started');
-//        try {
-//            $data = self::getVk()->initVars($id, $message);
-//            if ($data != null) {
-//                self::getLogger()->debug('Received data: ' . print_r($data, true));
-//
-//                if ($data->type == 'message_new') {
-//                    self::getLogger()->info('New message: '. print_r($message, true));
-//                    $message = $data->object->text;
-//                    /** @var BaseCommand $command */
-//                    foreach ($this->commands as $command) {
-//                        foreach ($command->aliases as $alias) {
-//                            if (preg_match('/'.$alias.'/ui', $message)) {
-//                                self::getLogger()->info('Command started: ' . get_class($command));
-//                                self::getLogger()->info('Before action started');
-//                                $beforeResult = $command->beforeAction($data);
-//                                self::getLogger()->debug('Before action returned: '.print_r($beforeResult,true));
-//                                if($beforeResult){
-//                                    self::getLogger()->info('Main action started');
-//                                    $command->run($data);
-//                                }
-//                                self::getLogger()->info('Command ended');
-//                                break;
-//                            }
-//                        }
-//                    }
-//                }
-//            }
-//        }
-//        catch (Exception $e) //TODO: раскидать по типам исключений
-//        {
-//            self::getLogger()->error($e->getMessage());
-//        }
-//        self::getLogger()->info('App ended');
+        self::getLogger()->info('App started');
         if(self::IsCli()){
-            $commands = self::$container->get('cli-commands');
-            /** @var CliCommand $command */
-            foreach ($commands as $command) {
-                if(in_array(self::$args[1], $command->aliases)) {
-                    $command->run();
+            $this->executeCli();
+        }
+        $this->exucuteVk();
+        self::getLogger()->info('App ended');
+    }
+
+    private function executeCli()
+    {
+        self::getLogger()->info('Runned from CLI');
+        $commands = self::$container->get('cli-commands');
+        /** @var CliCommand $command */
+        foreach ($commands as $command) {
+            $status = 0;
+            if(in_array(self::$args[1], $command->aliases)) {
+                if($command->beforeAction()){
+                    $status = $command->run();
+                }
+            }
+            exit($status);
+        }
+    }
+
+    private function exucuteVk()
+    {
+        self::getLogger()->info('Runned from VK');
+        $commands = self::$container->get('vk-commands');
+        $data = self::getVk()->initVars($id, $message);
+        self::getLogger()->debug('Received data: ' . print_r($data, true));
+        if($data != null) {
+            //TODO: Разделить команды по типу триггеров! message_new и т.д.!!!
+            if ($data->type == 'message_new') {
+                self::getLogger()->info('New message: '. print_r($message, true));
+                $message = $data->object->text;
+                /** @var VkCommand $command */
+                foreach ($commands as $command) {
+                    foreach ($command->aliases as $alias) {
+                        //TODO: Подумать на тему префиксов
+                        $regex = str_replace('<args>', '(?<args>.*)', $alias);
+                        $regex = "/$regex/ui";
+                        if (preg_match($regex, $message, $matches)) {
+                            self::getLogger()->debug($regex);
+                            self::getLogger()->info('Command detected: ' . get_class($command));
+                            $args = $matches['args'] ?? null;
+                            self::getLogger()->debug('Parsed Args: ' . print_r($args, true));
+                            $command->init($data, $args);
+                            if($command->beforeAction()) {
+                                $status = 'ok';
+                                $status = $command->run();
+                                self::getLogger()->info("Command executed with status: $status");
+                            }
+                        }
+                    }
                 }
             }
         }

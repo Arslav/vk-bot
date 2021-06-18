@@ -3,7 +3,7 @@
 namespace Bot\Commands;
 
 use Bot\App;
-use Bot\Base\BaseCommand;
+use Bot\Base\Command;
 use Bot\Entities\WhoHistory;
 use Bot\Entities\WhoItem;
 use Carbon\Carbon;
@@ -15,7 +15,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Parameter;
 use Exception;
 
-class WhoAmICommand extends BaseCommand
+class WhoAmICommand extends Command
 {
     /**
      * @inheritDoc
