@@ -26,6 +26,11 @@ abstract class VkCommand extends Command
      */
     public $chat_id;
 
+    /**
+     * @var mixed
+     */
+    public $data;
+
     //TODO: Параметр для отключения ^ $
 
     /**
@@ -34,6 +39,7 @@ abstract class VkCommand extends Command
      */
     public function init($data, $args) : void
     {
+        $this->data = $data;
         $this->message = $data->object->text;
         $this->peer_id = $data->object->peer_id;
         $this->from_id = $data->object->from_id;
