@@ -11,18 +11,7 @@ class BlyaCommand extends VkCommand
     /**
      * @var float
      */
-    public $chance;
-
-    /**
-     * BlyaCommand constructor.
-     * @param array $aliases
-     * @param float $chance
-     */
-    public function __construct(array $aliases, float $chance)
-    {
-        $this->chance = $chance;
-        parent::__construct($aliases);
-    }
+    public $chance = 0.3;
 
     /**
      * @inheritDoc

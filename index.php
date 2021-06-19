@@ -7,4 +7,5 @@ use Psr\Container\ContainerInterface;
 $container = require __DIR__ . '/bootstrap.php';
 $argv = $argv ?? null;
 $app = App::init($container, $argv);
+
 $app->run();

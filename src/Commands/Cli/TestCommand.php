@@ -1,9 +1,9 @@
 <?php
 
-namespace Bot\Commands\Vk\Cli;
+namespace Bot\Commands\Cli;
 
 use Bot\App;
-use Bot\Commands\Vk\Cli\Base\CliCommand;
+use Bot\Commands\Cli\Base\CliCommand;
 use DigitalStar\vk_api\VkApiException;
 
 class TestCommand extends CliCommand

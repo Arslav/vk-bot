@@ -19,23 +19,21 @@ abstract class LimitedVkCommand extends VkCommand
     /**
      * @var int
      */
-    public $limit;
+    public $limit = 10;
 
     /**
      * @var int
      */
-    public $interval;
+    public $interval = 300;
 
     /**
      * LimitedVkCommand constructor.
      * @param array $aliases
-     * @param int $limit
-     * @param int $interval
+//     * @param int $limit
+//     * @param int $interval
      */
-    public function __construct(array $aliases , int $limit, int $interval)
+    public function __construct(array $aliases)
     {
-        $this->limit = $limit;
-        $this->interval = $interval;
         parent::__construct($aliases);
     }
 

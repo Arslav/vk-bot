@@ -1,9 +1,9 @@
 <?php
 
-namespace Bot\Commands\Vk\Cli\Base;
+namespace Bot\Commands\Cli\Base;
 
 use Bot\App;
-use Bot\Commands\Vk\Command;
+use Bot\Commands\Command;
 
 abstract class CliCommand extends Command
 {

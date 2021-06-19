@@ -3,7 +3,7 @@
 namespace Bot;
 
 use Bot\Commands\Vk\Cli\Base\CliCommand;
-use Bot\Commands\Vk\Vk\Base\VkCommand;
+use Bot\Commands\Vk\Base\VkCommand;
 use DigitalStar\vk_api\vk_api;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -31,7 +31,6 @@ class App
      * @var array
      */
     private static $args;
-
 
     /**
      * App constructor.

@@ -11,20 +11,7 @@ class PressFCommand extends LimitedVkCommand
     /**
      * @var float
      */
-    public $chance;
-
-    /**
-     * PressFCommand constructor.
-     * @param array $aliases
-     * @param int $limit
-     * @param int $interval
-     * @param float $chance
-     */
-    public function __construct(array $aliases, int $limit, int $interval, float $chance)
-    {
-        $this->chance = $chance;
-        parent::__construct($aliases, $limit, $interval);
-    }
+    public $chance = 0.5;
 
     /**
      * @inheritDoc

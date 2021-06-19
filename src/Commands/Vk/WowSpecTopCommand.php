@@ -18,7 +18,7 @@ class WowSpecTopCommand extends VkCommand
     /**
      * @var int
      */
-    private $count = 3;
+    public $count = 3;
 
     /**
      * @inheritDoc

@@ -26,7 +26,7 @@ abstract class VkCommand extends Command
      */
     public $chat_id;
 
-    //TODO: Параметр для выноса отключения ^ $
+    //TODO: Параметр для отключения ^ $
 
     /**
      * @param mixed $args

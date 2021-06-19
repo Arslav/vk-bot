@@ -1,7 +1,7 @@
 <?php
 
+use Bot\Commands\Cli\TestCommand;
 use Bot\Commands\Vk\BlyaCommand;
-use Bot\Commands\Vk\Cli\TestCommand;
 use Bot\Commands\Vk\AutistCommand;
 use Bot\Commands\Vk\GiveMePillsCommand;
 use Bot\Commands\Vk\KickMeCommand;
@@ -82,26 +82,24 @@ return [
             '^ря+$',
             '^[аы]{2,}$'
         ])
-        ->constructorParameter('limit', 10)
-        ->constructorParameter('interval', 300),
+    ->property('limit', 20),
 
     BlyaCommand::class => autowire()
-        ->constructorParameter('aliases', ['^ля+$'])
-        ->constructorParameter('chance', 0.5),
+        ->constructorParameter('aliases', ['^ля+$']),
+
     GiveMePillsCommand::class => autowire()
-        ->constructorParameter('aliases', ['сла+ва+(\,)? дай табле(тки+|то+к)\s?[(\!)(\?)]*$'])
-        ->constructorParameter('limit', 10)
-        ->constructorParameter('interval', 300),
+        ->constructorParameter('aliases', ['сла+ва+(\,)? дай табле(тки+|то+к)\s?[(\!)(\?)]*$']),
+
     KickMeCommand::class => autowire()
-        ->constructorParameter('aliases', ['^сла+ва+(\,)? не ки+ка+й\s?[(\!)(\?)]*$'])
-        ->constructorParameter('chance', 0.5),
+        ->constructorParameter('aliases', ['^сла+ва+(\,)? не ки+ка+й\s?[(\!)(\?)]*$']),
+
     PressFCommand::class => autowire()
-        ->constructorParameter('aliases', ['(.*\s|^)f([\.\!\?\,]|\s.*|$)'])
-        ->constructorParameter('limit', 10)
-        ->constructorParameter('interval', 300)
-        ->constructorParameter('chance', 0.5),
+        ->constructorParameter('aliases', ['(.*\s|^)f([\.\!\?\,]|\s.*|$)']),
+
     WhoAmICommand::class => create()->constructor(['^сла+ва+(\,)? [кчх]то+ я\s?(\?)*$']),
+
     WhoWeCommand::class => create()->constructor(['^сла+ва+(\,)? [хк]то+ мы+\s?(\?)*$']),
+
     WowSpecTopCommand::class => create()->constructor(['^сла+ва+(\,)? [хк]то+ (сегодня\s)?топ\s?[(\!)(\?)]*$']),
 
     'vk-commands' => [
