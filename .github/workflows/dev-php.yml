@@ -12,6 +12,17 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Send start deploy message
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USER }}
+          key: ${{ secrets.SSHKEY }}
+          port: ${{ secrets.PORT }}
+          script: |
+            cd /var/www/dev-bot
+            php index.php send 2000000001 "Слава опять что-то запушил, помянем меня((("
+
       - uses: actions/checkout@v2
 
       - name: Copy repository contents via scp
