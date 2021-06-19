@@ -2,8 +2,8 @@
 
 namespace Bot;
 
-use Bot\Commands\Cli\Base\CliCommand;
-use Bot\Commands\Vk\Base\VkCommand;
+use Bot\Commands\Vk\Cli\Base\CliCommand;
+use Bot\Commands\Vk\Vk\Base\VkCommand;
 use DigitalStar\vk_api\vk_api;
 use Doctrine\ORM\EntityManager;
 use Exception;
@@ -116,14 +116,6 @@ class App
         return self::$container;
     }
 
-//    /**
-//     * @param BaseCommand $command
-//     */
-//    public function add(BaseCommand $command) : void
-//    {
-//        $this->commands[] = $command;
-//    }
-
     /**
      * Run App
      */
@@ -131,31 +123,33 @@ class App
     {
         self::getLogger()->info('App started');
         if(self::IsCli()){
-            $this->executeCli();
+            $this->runCliCommands();
+        } else {
+            $this->runVkCommands();
         }
-        $this->exucuteVk();
         self::getLogger()->info('App ended');
     }
 
-    private function executeCli()
+    private function runCliCommands()
     {
-        self::getLogger()->info('Runned from CLI');
+        self::getLogger()->info('Launched from CLI');
         $commands = self::$container->get('cli-commands');
+        self::getLogger()->debug('Args: ' . print_r(self::$args, true));
         /** @var CliCommand $command */
         foreach ($commands as $command) {
-            $status = 0;
             if(in_array(self::$args[1], $command->aliases)) {
+                self::getLogger()->info('Command detected: ' . get_class($command));
                 if($command->beforeAction()){
                     $status = $command->run();
+                    exit($status);
                 }
             }
-            exit($status);
         }
     }
 
-    private function exucuteVk()
+    private function runVkCommands()
     {
-        self::getLogger()->info('Runned from VK');
+        self::getLogger()->info('Launched from VK');
         $commands = self::$container->get('vk-commands');
         $data = self::getVk()->initVars($id, $message);
         self::getLogger()->debug('Received data: ' . print_r($data, true));
@@ -178,9 +172,9 @@ class App
                             self::getLogger()->debug('Parsed Args: ' . print_r($args, true));
                             $command->init($data, $args);
                             if($command->beforeAction()) {
-                                $status = 'ok';
                                 $status = $command->run();
                                 self::getLogger()->info("Command executed with status: $status");
+                                return;
                             }
                         }
                     }

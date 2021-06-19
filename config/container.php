@@ -1,7 +1,14 @@
 <?php
 
-use Bot\Commands\Cli\TestCommand;
+use Bot\Commands\Vk\BlyaCommand;
+use Bot\Commands\Vk\Cli\TestCommand;
 use Bot\Commands\Vk\AutistCommand;
+use Bot\Commands\Vk\GiveMePillsCommand;
+use Bot\Commands\Vk\KickMeCommand;
+use Bot\Commands\Vk\PressFCommand;
+use Bot\Commands\Vk\WhoAmICommand;
+use Bot\Commands\Vk\WhoWeCommand;
+use Bot\Commands\Vk\WowSpecTopCommand;
 use DigitalStar\vk_api\vk_api;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
@@ -9,6 +16,7 @@ use Doctrine\ORM\Tools\Setup;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
+use function DI\autowire;
 use function DI\create;
 use function DI\get;
 
@@ -60,28 +68,51 @@ return [
         }
         return $vk;
     }),
+
     TestCommand::class => create(TestCommand::class)->constructor(['test']),
-    AutistCommand::class => create(AutistCommand::class)
-        ->constructor(
-            [
-                '^ыы+$',
-                '^кря+$',
-                '^ря+$',
-                '^[аы]{2,}$'
-            ],
-            10,
-            300
-        ),
-    \Bot\Commands\Vk\TestCommand::class => create(\Bot\Commands\Vk\TestCommand::class)
-        ->constructor(['^сла+ва+(\,)? <args>']),
 
     'cli-commands' => [
         get(TestCommand::class),
     ],
 
+    AutistCommand::class => autowire()
+        ->constructorParameter('aliases',[
+            '^ыы+$',
+            '^кря+$',
+            '^ря+$',
+            '^[аы]{2,}$'
+        ])
+        ->constructorParameter('limit', 10)
+        ->constructorParameter('interval', 300),
+
+    BlyaCommand::class => autowire()
+        ->constructorParameter('aliases', ['^ля+$'])
+        ->constructorParameter('chance', 0.5),
+    GiveMePillsCommand::class => autowire()
+        ->constructorParameter('aliases', ['сла+ва+(\,)? дай табле(тки+|то+к)\s?[(\!)(\?)]*$'])
+        ->constructorParameter('limit', 10)
+        ->constructorParameter('interval', 300),
+    KickMeCommand::class => autowire()
+        ->constructorParameter('aliases', ['^сла+ва+(\,)? не ки+ка+й\s?[(\!)(\?)]*$'])
+        ->constructorParameter('chance', 0.5),
+    PressFCommand::class => autowire()
+        ->constructorParameter('aliases', ['(.*\s|^)f([\.\!\?\,]|\s.*|$)'])
+        ->constructorParameter('limit', 10)
+        ->constructorParameter('interval', 300)
+        ->constructorParameter('chance', 0.5),
+    WhoAmICommand::class => create()->constructor(['^сла+ва+(\,)? [кчх]то+ я\s?(\?)*$']),
+    WhoWeCommand::class => create()->constructor(['^сла+ва+(\,)? [хк]то+ мы+\s?(\?)*$']),
+    WowSpecTopCommand::class => create()->constructor(['^сла+ва+(\,)? [хк]то+ (сегодня\s)?топ\s?[(\!)(\?)]*$']),
+
     'vk-commands' => [
         get(AutistCommand::class),
-        get(\Bot\Commands\Vk\TestCommand::class),
+        get(BlyaCommand::class),
+        get(GiveMePillsCommand::class),
+        get(KickMeCommand::class),
+        get(PressFCommand::class),
+        get(WhoAmICommand::class),
+        get(WhoWeCommand::class),
+        get(WowSpecTopCommand::class),
     ]
 ];
 

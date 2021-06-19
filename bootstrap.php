@@ -9,6 +9,6 @@ $dotenv = Dotenv::createMutable(__DIR__);
 $dotenv->load();
 
 $builder = new DI\ContainerBuilder();
-$builder->addDefinitions(__DIR__.'/config/services.php');
+$builder->addDefinitions(__DIR__.'/config/container.php');
 
 return $builder->build();

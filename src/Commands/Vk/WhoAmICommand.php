@@ -1,9 +1,9 @@
 <?php
 
-namespace Bot\Commands;
+namespace Bot\Commands\Vk;
 
 use Bot\App;
-use Bot\Base\Command;
+use Bot\Commands\Vk\Base\VkCommand;
 use Bot\Entities\WhoHistory;
 use Bot\Entities\WhoItem;
 use Carbon\Carbon;
@@ -15,7 +15,7 @@ use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Parameter;
 use Exception;
 
-class WhoAmICommand extends Command
+class WhoAmICommand extends VkCommand
 {
     /**
      * @inheritDoc
@@ -26,10 +26,10 @@ class WhoAmICommand extends Command
      * @throws VkApiException
      * @throws Exception
      */
-    public function run($data): void
+    public function run(): void
     {
-        $user_id = $data->object->from_id;
-        $peer_id = $data->object->peer_id;
+        $user_id = $this->from_id;
+        $peer_id = $this->peer_id;
 
         $history = $this->findTodayWhoHistory($user_id);
         if (!$history) {

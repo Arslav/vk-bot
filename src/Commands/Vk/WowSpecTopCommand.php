@@ -1,28 +1,32 @@
 <?php
 
-namespace Bot\Commands;
+namespace Bot\Commands\Vk;
 
 use Bot\App;
-use Bot\Base\Command;
+use Bot\Commands\Vk\Base\VkCommand;
 use Bot\Entities\WowSpec;
 use Bot\Entities\WowSpecTop;
 use Carbon\Carbon;
+use DigitalStar\vk_api\VkApiException;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\OptimisticLockException;
 use Doctrine\ORM\ORMException;
 use Doctrine\ORM\Query\Parameter;
 
-class WowSpecTopCommand extends Command
+class WowSpecTopCommand extends VkCommand
 {
     /**
      * @var int
      */
-    public $count = 3;
+    private $count = 3;
 
     /**
      * @inheritDoc
+     * @throws VkApiException
+     * @throws OptimisticLockException
+     * @throws ORMException
      */
-    public function run($data): void
+    public function run(): void
     {
         $top = $this->getTop();
         $list = empty($top) ? $this->generateTop() : $top;
