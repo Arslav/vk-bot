@@ -1,14 +1,5 @@
 <?php
 
-use Bot\Commands\Cli\TestCommand;
-use Bot\Commands\Vk\BlyaCommand;
-use Bot\Commands\Vk\AutistCommand;
-use Bot\Commands\Vk\GiveMePillsCommand;
-use Bot\Commands\Vk\KickMeCommand;
-use Bot\Commands\Vk\PressFCommand;
-use Bot\Commands\Vk\WhoAmICommand;
-use Bot\Commands\Vk\WhoWeCommand;
-use Bot\Commands\Vk\WowSpecTopCommand;
 use DigitalStar\vk_api\vk_api;
 use Doctrine\DBAL\DriverManager;
 use Doctrine\ORM\EntityManager;
@@ -16,9 +7,6 @@ use Doctrine\ORM\Tools\Setup;
 use Monolog\Handler\StreamHandler;
 use Monolog\Logger;
 use Psr\Container\ContainerInterface;
-use function DI\autowire;
-use function DI\create;
-use function DI\get;
 
 return [
     'LOG_LEVEL' => DI\env('LOG_LEVEL'),
@@ -68,49 +56,5 @@ return [
         }
         return $vk;
     }),
-
-    TestCommand::class => create(TestCommand::class)->constructor(['test']),
-
-    'cli-commands' => [
-        get(TestCommand::class),
-    ],
-
-    AutistCommand::class => autowire()
-        ->constructorParameter('aliases',[
-            '^ыы+$',
-            '^кря+$',
-            '^ря+$',
-            '^[аы]{2,}$'
-        ])
-    ->property('limit', 20),
-
-    BlyaCommand::class => autowire()
-        ->constructorParameter('aliases', ['^ля+$']),
-
-    GiveMePillsCommand::class => autowire()
-        ->constructorParameter('aliases', ['сла+ва+(\,)? дай табле(тки+|то+к)\s?[(\!)(\?)]*$']),
-
-    KickMeCommand::class => autowire()
-        ->constructorParameter('aliases', ['^сла+ва+(\,)? не ки+ка+й\s?[(\!)(\?)]*$']),
-
-    PressFCommand::class => autowire()
-        ->constructorParameter('aliases', ['(.*\s|^)f([\.\!\?\,]|\s.*|$)']),
-
-    WhoAmICommand::class => create()->constructor(['^сла+ва+(\,)? [кчх]то+ я\s?(\?)*$']),
-
-    WhoWeCommand::class => create()->constructor(['^сла+ва+(\,)? [хк]то+ мы+\s?(\?)*$']),
-
-    WowSpecTopCommand::class => create()->constructor(['^сла+ва+(\,)? [хк]то+ (сегодня\s)?топ\s?[(\!)(\?)]*$']),
-
-    'vk-commands' => [
-        get(AutistCommand::class),
-        get(BlyaCommand::class),
-        get(GiveMePillsCommand::class),
-        get(KickMeCommand::class),
-        get(PressFCommand::class),
-        get(WhoAmICommand::class),
-        get(WhoWeCommand::class),
-        get(WowSpecTopCommand::class),
-    ]
 ];
 

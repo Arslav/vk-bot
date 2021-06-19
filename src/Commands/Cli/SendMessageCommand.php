@@ -6,7 +6,7 @@ use Bot\App;
 use Bot\Commands\Cli\Base\CliCommand;
 use DigitalStar\vk_api\VkApiException;
 
-class TestCommand extends CliCommand
+class SendMessageCommand extends CliCommand
 {
     /**
      * @throws VkApiException
