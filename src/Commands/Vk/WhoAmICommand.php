@@ -28,13 +28,10 @@ class WhoAmICommand extends VkCommand
      */
     public function run(): void
     {
-        $user_id = $this->from_id;
-        $peer_id = $this->peer_id;
-
-        $history = $this->findTodayWhoHistory($user_id);
+        $history = $this->findTodayWhoHistory();
         if (!$history) {
             $name = $this->getRandomName();
-            $this->saveWhoHistory($name, $user_id, $peer_id);
+            $this->saveWhoHistory($name);
         } else {
             $name = $history->getName();
         }
@@ -67,21 +64,22 @@ class WhoAmICommand extends VkCommand
     }
 
     /**
-     * @param int $user_id
      * @return WhoHistory | null
      * @throws NonUniqueResultException
      */
-    private function findTodayWhoHistory(int $user_id): ?WhoHistory
+    private function findTodayWhoHistory(): ?WhoHistory
     {
         return App::getEntityManager()
             ->getRepository(WhoHistory::class)
             ->createQueryBuilder('h')
             ->where('h.created_at BETWEEN :start AND :end')
             ->andWhere('h.user_id = :user_id')
+            ->andWhere('h.peer_id = :peer_id')
             ->setParameters(new ArrayCollection([
                 new Parameter('start', Carbon::today()->timestamp),
                 new Parameter('end', Carbon::tomorrow()->timestamp),
-                new Parameter('user_id', $user_id),
+                new Parameter('user_id', $this->from_id),
+                new Parameter('peer_id', $this->peer_id),
             ]))
             ->getQuery()
             ->getOneOrNullResult();
@@ -89,19 +87,17 @@ class WhoAmICommand extends VkCommand
 
     /**
      * @param string $name
-     * @param int $user_id
-     * @param int $peer_id
      * @return void
      * @throws ORMException
      * @throws OptimisticLockException
      */
-    private function saveWhoHistory(string $name, int $user_id, int $peer_id): void
+    private function saveWhoHistory(string $name): void
     {
         $em = App::getEntityManager();
         $history = new WhoHistory();
         $history->setName($name);
-        $history->setUserId($user_id);
-        $history->setPeerId($peer_id);
+        $history->setUserId($this->from_id);
+        $history->setPeerId($this->peer_id);
         $em->persist($history);
         $em->flush($history);
     }
